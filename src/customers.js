@@ -1,3 +1,9 @@
+const welcomeCustomerHeader = (currentCustomer) => {
+  return (header.textContent = `Welcome to Your Overlook Booking Dashboard, ${
+    currentCustomer.name.split(" ")[0]
+  }!`);
+};
+
 const currentCustomersBookedRooms = (currentCustomer, bookedRooms) => {
   const customerID = currentCustomer.id;
   return bookedRooms.filter((booking) => booking.userID === customerID);
@@ -39,6 +45,7 @@ const customersTotalSpending = (roomInfo) => {
 };
 
 export {
+  welcomeCustomerHeader,
   currentCustomersBookedRooms,
   currentCustomersRoomInfo,
   customersTotalSpending,

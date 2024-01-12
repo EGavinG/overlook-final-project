@@ -1,3 +1,167 @@
+body,
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+  font-family: "Arial", sans-serif;
+  background-color: #000080;
+  color: #333;
+}
+
+header {
+  width: 100%;
+  background-color: #feb215;
+  color: #000080;
+  text-align: center;
+  padding: 10px;
+}
+
+#login {
+  display: none;
+  margin: 20px;
+}
+
+#login h2 {
+  color: #333;
+}
+
+#login form {
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+#login label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#login input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+#login button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.main-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+#dashboard {
+  width: 511.5px;
+  height: 530px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #feb215;
+  border-radius: 25px;
+  padding: 20px;
+}
+
+#dashboard h1 {
+  color: #333;
+}
+
+#dashboard div {
+  margin-bottom: 20px;
+}
+
+#dashboard h2 {
+  color: #333;
+}
+
+#customerInteraction {
+  width: 511.5px;
+  height: 530px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #feb215;
+  border-radius: 25px;
+  padding: 20px;
+}
+
+#customerInteraction h2 {
+  color: #333;
+}
+
+#bookingDate,
+#roomTypeFilter,
+#bookRoom {
+  margin-top: 10px;
+}
+
+#roomDetailsList {
+  list-style-type: none;
+  padding: 5px;
+  height: 420px;
+  width: 500px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #000080 #feb215;
+}
+
+#roomDetailsList::-webkit-scrollbar {
+  width: 5px;
+}
+
+#roomDetailsList::-webkit-scrollbar-thumb {
+  background-color: #000080;
+}
+
+#roomDetailsList::-webkit-scrollbar-track {
+  background-color: #feb215;
+}
+
+#roomDetailsList li {
+  color: #feb215;
+  border: 2px solid #000080;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #000080;
+  border-radius: 15px;
+}
+
+#noAvailableRoomsMessage {
+  color: #e74c3c;
+  margin-top: 10px;
+}
+
+img.turing-logo {
+  max-width: 3%;
+  height: auto;
+  padding-right: 10px;
+}
+
+footer {
+  display: flex;
+  background-color: #feb215;
+  color: #000080;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 40px;
 }

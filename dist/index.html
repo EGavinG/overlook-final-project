@@ -7,13 +7,11 @@
     <title>Overlook Adventure</title>
   </head>
   <body>
-    <img src="./images/turing-logo.png" alt="turing logo" />
-
     <header>
-      <h1>Welcome to Your Hotel Booking Dashboard ${user.name}!</h1>
+      <h1 id="header">Original Text</h1>
     </header>
 
-    <section id="login hidden">
+    <section id="login">
       <h2>Login</h2>
       <form action="login.php" method="post">
         <label for="username">Username:</label>
@@ -25,39 +23,41 @@
         <button type="submit">Login</button>
       </form>
     </section>
+    <div class="main-container">
+      <section id="dashboard">
+        <div>
+          <div>
+            <h2><p class="spent">Total Amount Spent</p></h2>
+            <!-- Make this targetted section dynamically built out with js -->
 
-    <section id="dashboard">
-      <h2>Dashboard</h2>
-      <div>
-        <h3>My Room Bookings</h3>
-        <!-- Make this targetted section dynamically built out with js -->
-      </div>
-      <div>
-        <h3>Total Amount Spent</h3>
-        <!-- Make this targetted section dynamically built out with js -->
-      </div>
-    </section>
+            <h2>My Room Bookings</h2>
+            <br />
+            <ul id="roomDetailsList"></ul>
+          </div>
+        </div>
+      </section>
 
-    <section id="customerInteraction">
-      <label for="bookingDate">Select Booking Date:</label>
-      <input type="date" id="bookingDate" name="bookingDate" required />
+      <section id="customerInteraction">
+        <label for="bookingDate">Select Booking Date:</label>
+        <input type="date" id="bookingDate" name="bookingDate" required />
 
-      <!-- Make this targetted section dynamically built out with js -->
-      <ul id="roomDetailsList">
-        <!-- Make this targetted section dynamically built out with js -->
-      </ul>
+        <label for="roomTypeFilter">Room Type:</label>
+        <select id="roomTypeFilter" name="roomTypeFilter">
+          <!-- Populate room types dynamically built out with js-->
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+        </select>
 
-      <label for="roomTypeFilter">Filter by Room Type:</label>
-      <select id="roomTypeFilter" name="roomTypeFilter">
-        <!-- Populate room types dynamically built out with js-->
-        <option value="single">Single</option>
-        <option value="double">Double</option>
-      </select>
-
-      <button id="bookRoom">Book Room</button>
-    </section>
+        <button id="bookRoom">Book Room</button>
+      </section>
+    </div>
 
     <footer>
+      <img
+        src="./images/turing-logo.png"
+        alt="turing logo"
+        class="turing-logo"
+      />
       <p>&copy; 2024 Your Hotel Booking App. All rights reserved.</p>
     </footer>
 
