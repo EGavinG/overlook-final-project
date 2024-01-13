@@ -40,15 +40,14 @@
       <section id="customerInteraction">
         <label for="bookingDate">Select Booking Date:</label>
         <input type="date" id="bookingDate" name="bookingDate" required />
-
+        <br />
         <label for="roomTypeFilter">Room Type:</label>
         <select id="roomTypeFilter" name="roomTypeFilter">
-          <!-- Populate room types dynamically built out with js-->
-          <option value="single">Single</option>
-          <option value="double">Double</option>
+          <option value="roomOptions">Rooms</option>
         </select>
 
         <button id="bookRoom">Book Room</button>
+        <ul id="filteredRoomDetailsList"></ul>
       </section>
     </div>
 

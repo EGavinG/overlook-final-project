@@ -103,10 +103,46 @@ header {
   color: #333;
 }
 
-#bookingDate,
-#roomTypeFilter,
-#bookRoom {
+#bookingDate {
+  width: 490px;
   margin-top: 10px;
+  display: flex;
+  background-color: #faf9f6;
+  color: #000080;
+  text-align: center;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 40px;
+}
+
+#roomTypeFilter {
+  width: 510px;
+  margin-top: 10px;
+  display: flex;
+  background-color: #faf9f6;
+  color: #000080;
+  text-align: center;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 40px;
+}
+
+#bookRoom {
+  width: 510px;
+  margin-top: 10px;
+  display: flex;
+  background-color: #000080;
+  color: #feb215;
+  text-align: center;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 40px;
 }
 
 #roomDetailsList {

@@ -32,7 +32,7 @@ const currentCustomersRoomInfo = (customersBookedRooms, allRooms) => {
     };
   });
 
-  return filteredRoomsAndDates;
+  return filteredRoomsAndDates.sort((a, b) => b.date.localeCompare(a.date))
 };
 
 const customersTotalSpending = (roomInfo) => {
@@ -44,7 +44,12 @@ const customersTotalSpending = (roomInfo) => {
   return totalExpense.toFixed();
 };
 
+const uniqueRoomTypes = (allRooms) => {
+  return [...new Set(allRooms.map((room) => room.roomType))];
+};
+
 export {
+  uniqueRoomTypes,
   welcomeCustomerHeader,
   currentCustomersBookedRooms,
   currentCustomersRoomInfo,
