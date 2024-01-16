@@ -27,9 +27,9 @@ const roomTypeFilter = document.getElementById("roomTypeFilter");
 const availableRoomsText = document.getElementById("availableRoomsText");
 const calendarError = document.getElementById("calendarError");
 const bookStayText = document.getElementById("bookStayText");
+const bookRoomButton = document.getElementById("bookRoom");
 
 // EventListeners
-// Unsure of how the specific user by login will function with it so will assign a const id to 1 to get that specified user.
 window.addEventListener("load", function () {
   const id = 1;
   Promise.all([
@@ -66,6 +66,12 @@ function handleFormSubmit(e) {
   }
 }
 
+bookRoomButton.addEventListener("click", () => {
+  const selectedRoomType = roomTypeFilter.value;
+  const selectedDate = fromDateInput.value;
+  bookRoom(selectedRoomType, selectedDate);
+});
+
 // Dom Functions
 const disperseAllData = (data) => {
   const customersBookedRooms = currentCustomersBookedRooms(
@@ -89,6 +95,7 @@ const disperseAllData = (data) => {
   uniqueRoomTypes(allRooms);
 };
 
+// Function that updates the dom to show filtered room results
 const updateRoomDetailsList = (roomInfo) => {
   roomDetailsList.innerHTML = "";
   roomInfo.forEach((room) => {
@@ -98,47 +105,94 @@ const updateRoomDetailsList = (roomInfo) => {
 
     filteredRoomDetailsList.innerHTML += `
       <div class="bookings-card">
+        <p class="date"> Date: <span>${room.date}</span></p>
         <p class="descriptor"> Room Type: <span>${room.roomType}</span></p>
         <p class="descriptor"> Bed Size: <span>${room.bedSize}</span></p>
         <p class="descriptor"> Beds: <span>${room.numBeds}</span></p>
         <p class="descriptor"> Per Night: <span>$${room.costPerNight}</span></p>
-        <button>View</button> 
+        <button>Book</button> 
       </div>
     `;
     roomDetailsList.appendChild(listItem);
   });
 };
 
-const updateFilteredRoomDetailsList = (filteredRoomInfo) => {
+function bookRoom(selectedRoomType, selectedDate) {
+  const formattedSelectedDate = selectedDate.replace(/-/g, "/");
+  const filteredRooms = allRooms.filter(
+    (room) => room.roomType === selectedRoomType
+  );
+
+  const bookedRooms = allBookings.filter(
+    (booking) => booking.date === formattedSelectedDate
+  );
+
+  const availableRooms = filteredRooms.filter((room) => {
+    return bookedRooms.find(
+      (availableRoom) => availableRoom.roomNumber === room.number
+    );
+  });
+
+  const filteredRoomDetailsList = document.getElementById(
+    "filteredRoomDetailsList"
+  );
+
+  console.log(availableRooms);
+  if (availableRooms.length > 0) {
+    updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
+  } else {
+    filteredRoomDetailsList.innerHTML = `
+      <p>No rooms available with the selected criteria. Please search again.</p>`;
+  }
+}
+
+// Dom function that updates filtered results
+const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
   filteredRoomDetailsList.innerHTML = "";
+
   filteredRoomInfo.forEach((room) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("bookings-card");
-    cardDiv.innerHTML = `
-      <p class="descriptor"> Room Type: <span>${room.roomType}</span></p>
-      <p class="descriptor"> Bed Size: <span>${room.bedSize}</span></p>
-      <p class="descriptor"> Beds: <span>${room.numBeds}</span></p>
-      <p class="descriptor"> Per Night: <span>$${room.costPerNight}</span></p>
-      <button>View</button>
-    `;
+
+    const detailsList = document.createElement("ul");
+
+    for (const [key, value] of Object.entries(room)) {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${
+        key.charAt(0).toUpperCase() + key.slice(1)
+      }: ${value}`;
+      detailsList.appendChild(listItem);
+    }
+
+    const bookButton = document.createElement("button");
+    bookButton.textContent = "Book";
+
+    cardDiv.appendChild(detailsList);
+    cardDiv.appendChild(bookButton);
+
     filteredRoomDetailsList.appendChild(cardDiv);
   });
 };
 
+// provides room options
 const updateRoomTypeFilterOptions = (roomTypes) => {
   const roomTypeFilter = document.getElementById("roomTypeFilter");
 
   roomTypeFilter.innerHTML = "";
 
+  // Default option (not selectable)
   const defaultOption = document.createElement("option");
-  defaultOption.value = "roomOptions";
-  defaultOption.textContent = "Rooms";
+  defaultOption.value = "";
+  defaultOption.textContent = "Select Room Type";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
   roomTypeFilter.appendChild(defaultOption);
 
+  // Capitalize the first letter of each room type
   roomTypes.forEach((roomType) => {
     const option = document.createElement("option");
     option.value = roomType;
-    option.textContent = roomType;
+    option.textContent = roomType.charAt(0).toUpperCase() + roomType.slice(1);
     roomTypeFilter.appendChild(option);
   });
 };
