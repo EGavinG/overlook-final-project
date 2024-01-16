@@ -47,6 +47,7 @@ window.addEventListener("load", function () {
 });
 
 dateSubmitForm.addEventListener("submit", handleFormSubmit);
+
 function handleFormSubmit(e) {
   e.preventDefault();
   const fromDate = fromDateInput.value;
@@ -54,15 +55,18 @@ function handleFormSubmit(e) {
 
   if (fromDate) {
     availableRoomsText.classList.add("hidden");
-    updateRoomDetailsList(allRooms, roomDetailsList);
+    const roomsConnectedToDate = getRoomsConnectedToDate(fromDate);
+
+    // Optionally further filter by room type
+    const filteredRooms =
+      selectedRoomType !== "roomOptions"
+        ? filterRoomsByType(roomsConnectedToDate, selectedRoomType)
+        : roomsConnectedToDate;
+
+    updateRoomDetailsList(filteredRooms);
   } else {
     calendarError.classList.remove("hidden");
     bookStayText.classList.add("hidden");
-  }
-
-  if (selectedRoomType !== "roomOptions") {
-    const filteredRooms = filterRoomsByType(allRooms, selectedRoomType);
-    updateRoomDetailsList(filteredRooms, filteredRoomDetailsList);
   }
 }
 
@@ -95,9 +99,15 @@ const disperseAllData = (data) => {
   uniqueRoomTypes(allRooms);
 };
 
+function filterRoomsByType(rooms, roomType) {
+  return rooms.filter((room) => room.roomType === roomType);
+}
+
 // Function that updates the dom to show filtered room results
 const updateRoomDetailsList = (roomInfo) => {
-  roomDetailsList.innerHTML = "";
+  filteredRoomDetailsList.innerHTML = ""; // Clear filtered room details list
+  roomDetailsList.innerHTML = ""; // Clear original room details list
+
   roomInfo.forEach((room) => {
     const listItem = document.createElement("li");
     listItem.textContent = `Date: ${room.date}, Room Type: ${room.roomType}, Bed Size: ${room.bedSize}, Cost per Night: $${room.costPerNight}`;
@@ -113,22 +123,17 @@ const updateRoomDetailsList = (roomInfo) => {
         <button>Book</button> 
       </div>
     `;
-    roomDetailsList.appendChild(listItem);
   });
 };
 
 function bookRoom(selectedRoomType, selectedDate) {
   const formattedSelectedDate = selectedDate.replace(/-/g, "/");
-  const filteredRooms = allRooms.filter(
-    (room) => room.roomType === selectedRoomType
-  );
-
   const bookedRooms = allBookings.filter(
     (booking) => booking.date === formattedSelectedDate
   );
 
-  const availableRooms = filteredRooms.filter((room) => {
-    return bookedRooms.find(
+  const availableRooms = allRooms.filter((room) => {
+    return !bookedRooms.find(
       (availableRoom) => availableRoom.roomNumber === room.number
     );
   });
@@ -138,11 +143,24 @@ function bookRoom(selectedRoomType, selectedDate) {
   );
 
   console.log(availableRooms);
-  if (availableRooms.length > 0) {
-    updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
-  } else {
-    filteredRoomDetailsList.innerHTML = `
-      <p>No rooms available with the selected criteria. Please search again.</p>`;
+
+  // Display available rooms for the specified date on the DOM
+  updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
+
+  // Optionally further filter by room type
+  if (selectedRoomType !== "") {
+    const filteredRooms = availableRooms.filter(
+      (room) => room.roomType === selectedRoomType
+    );
+
+    console.log(filteredRooms);
+
+    if (filteredRooms.length > 0) {
+      updateFilteredRoomDetailsList(filteredRooms, formattedSelectedDate);
+    } else {
+      filteredRoomDetailsList.innerHTML = `
+        <p>No rooms available with the selected criteria. Please search again.</p>`;
+    }
   }
 }
 
@@ -173,6 +191,8 @@ const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
     filteredRoomDetailsList.appendChild(cardDiv);
   });
 };
+
+// ...
 
 // provides room options
 const updateRoomTypeFilterOptions = (roomTypes) => {
