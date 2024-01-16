@@ -8,19 +8,35 @@
   </head>
   <body>
     <header>
-      <h1 id="header">Original Text</h1>
+      <h1 id="header">Welcome to Overlook!</h1>
     </header>
 
-    <section id="login">
-      <h2>Login</h2>
-      <form action="login.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required />
+    <section id="main-holder">
+      <h1 id="login-header">Login</h1>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
+      <div id="login-error-msg-holder">
+        <p id="login-error-msg">
+          Invalid username
+          <span id="error-msg-second-line">and/or password</span>
+        </p>
+      </div>
 
-        <button type="submit">Login</button>
+      <form id="login-form">
+        <input
+          type="text"
+          name="username"
+          id="username-field"
+          class="login-form-field"
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          name="password"
+          id="password-field"
+          class="login-form-field"
+          placeholder="Password"
+        />
+        <input type="submit" value="Login" id="login-form-submit" />
       </form>
     </section>
     <div class="main-container">
