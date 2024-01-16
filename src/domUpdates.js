@@ -1,5 +1,5 @@
 // Imports
-import { fetchAPIcall } from "./apiCalls";
+import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
 import {
   welcomeCustomerHeader,
   currentCustomersBookedRooms,
@@ -28,25 +28,82 @@ const availableRoomsText = document.getElementById("availableRoomsText");
 const calendarError = document.getElementById("calendarError");
 const bookStayText = document.getElementById("bookStayText");
 const bookRoomButton = document.getElementById("bookRoom");
+const loginForm = document.getElementById("login-form");
+const loginButton = document.getElementById("login-form-submit");
+const loginErrorMsg = document.getElementById("login-error-msg");
 
 // EventListeners
-window.addEventListener("load", function () {
-  const id = 1;
-  Promise.all([
-    fetchAPIcall(`customers/${id}`),
-    fetchAPIcall("customers"),
-    fetchAPIcall("rooms"),
-    fetchAPIcall("bookings"),
-  ]).then((allData) => {
-    currentCustomer = allData[0];
-    allCustomers = allData[1].customers;
-    allRooms = allData[2].rooms;
-    allBookings = allData[3].bookings;
-    disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
-  });
+
+window.addEventListener("load", async function () {
+  if (window.currentUser) {
+    // If logged in, load data for the current user
+    try {
+      const allData = await Promise.all([
+        fetchAPIcall(`customers/${window.currentUser}`),
+        fetchAPIcall("customers"),
+        fetchAPIcall("rooms"),
+        fetchAPIcall("bookings"),
+        bookRoomFunction("bookings"),
+      ]);
+
+      currentCustomer = allData[0];
+      allCustomers = allData[1].customers;
+      allRooms = allData[2].rooms;
+      allBookings = allData[3].bookings;
+
+      disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  } else {
+    // If not logged in, show login form or redirect to login page
+    console.log(
+      "User not logged in. Display login form or redirect to login page."
+    );
+  }
+});
+
+loginButton.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const username = loginForm.username.value;
+  const password = loginForm.password.value;
+
+  // Extract the customer number from the username
+  const customerNumber = parseInt(username.replace(/\D/g, "")); // Extract only digits
+
+  if (!isNaN(customerNumber) && password === "overlook2021") {
+    let id = customerNumber;
+
+    try {
+      const allData = await Promise.all([
+        fetchAPIcall(`customers/${id}`),
+        fetchAPIcall("customers"),
+        fetchAPIcall("rooms"),
+        fetchAPIcall("bookings"),
+      ]);
+
+      currentCustomer = allData[0];
+      allCustomers = allData[1].customers;
+      allRooms = allData[2].rooms;
+      allBookings = allData[3].bookings;
+
+      disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
+
+      alert("You have successfully logged in.");
+
+      document.getElementById("main-holder").style.display = "none";
+
+      document.getElementById("main-container").style.display = "block";
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  } else {
+    loginErrorMsg.style.opacity = 1;
+  }
 });
 
 dateSubmitForm.addEventListener("submit", handleFormSubmit);
+
 function handleFormSubmit(e) {
   e.preventDefault();
   const fromDate = fromDateInput.value;
@@ -54,15 +111,17 @@ function handleFormSubmit(e) {
 
   if (fromDate) {
     availableRoomsText.classList.add("hidden");
-    updateRoomDetailsList(allRooms, roomDetailsList);
+    const roomsConnectedToDate = getRoomsConnectedToDate(fromDate);
+
+    const filteredRooms =
+      selectedRoomType !== "roomOptions"
+        ? filterRoomsByType(roomsConnectedToDate, selectedRoomType)
+        : roomsConnectedToDate;
+
+    updateRoomDetailsList(filteredRooms);
   } else {
     calendarError.classList.remove("hidden");
     bookStayText.classList.add("hidden");
-  }
-
-  if (selectedRoomType !== "roomOptions") {
-    const filteredRooms = filterRoomsByType(allRooms, selectedRoomType);
-    updateRoomDetailsList(filteredRooms, filteredRoomDetailsList);
   }
 }
 
@@ -70,6 +129,16 @@ bookRoomButton.addEventListener("click", () => {
   const selectedRoomType = roomTypeFilter.value;
   const selectedDate = fromDateInput.value;
   bookRoom(selectedRoomType, selectedDate);
+});
+
+window.addEventListener("load", function () {
+  if (window.currentUser) {
+    disperseAllData(window.currentUser, allCustomers, allRooms, allBookings);
+  } else {
+    console.log(
+      "User not logged in. Display login form or redirect to login page."
+    );
+  }
 });
 
 // Dom Functions
@@ -95,9 +164,16 @@ const disperseAllData = (data) => {
   uniqueRoomTypes(allRooms);
 };
 
+function filterRoomsByType(rooms, roomType) {
+  return rooms.filter((room) => room.roomType === roomType);
+}
+
 // Function that updates the dom to show filtered room results
 const updateRoomDetailsList = (roomInfo) => {
-  roomDetailsList.innerHTML = "";
+  // if (window.currentUser) {
+  filteredRoomDetailsList.innerHTML = ""; // Clear filtered room details list
+  roomDetailsList.innerHTML = ""; // Clear original room details list
+
   roomInfo.forEach((room) => {
     const listItem = document.createElement("li");
     listItem.textContent = `Date: ${room.date}, Room Type: ${room.roomType}, Bed Size: ${room.bedSize}, Cost per Night: $${room.costPerNight}`;
@@ -110,25 +186,21 @@ const updateRoomDetailsList = (roomInfo) => {
         <p class="descriptor"> Bed Size: <span>${room.bedSize}</span></p>
         <p class="descriptor"> Beds: <span>${room.numBeds}</span></p>
         <p class="descriptor"> Per Night: <span>$${room.costPerNight}</span></p>
-        <button>Book</button> 
+        <button class ="booking-button">Book</button> 
       </div>
+      <br>
     `;
-    roomDetailsList.appendChild(listItem);
   });
 };
 
-function bookRoom(selectedRoomType, selectedDate) {
+const bookRoom = (selectedRoomType, selectedDate) => {
   const formattedSelectedDate = selectedDate.replace(/-/g, "/");
-  const filteredRooms = allRooms.filter(
-    (room) => room.roomType === selectedRoomType
-  );
-
   const bookedRooms = allBookings.filter(
     (booking) => booking.date === formattedSelectedDate
   );
 
-  const availableRooms = filteredRooms.filter((room) => {
-    return bookedRooms.find(
+  const availableRooms = allRooms.filter((room) => {
+    return !bookedRooms.find(
       (availableRoom) => availableRoom.roomNumber === room.number
     );
   });
@@ -137,14 +209,25 @@ function bookRoom(selectedRoomType, selectedDate) {
     "filteredRoomDetailsList"
   );
 
-  console.log(availableRooms);
-  if (availableRooms.length > 0) {
-    updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
-  } else {
-    filteredRoomDetailsList.innerHTML = `
-      <p>No rooms available with the selected criteria. Please search again.</p>`;
+  // Display available rooms for the specified date on the DOM
+  updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
+
+  // Optionally further filter by room type
+  if (selectedRoomType !== "") {
+    const filteredRooms = availableRooms.filter(
+      (room) => room.roomType === selectedRoomType
+    );
+
+    console.log(filteredRooms);
+
+    if (filteredRooms.length > 0) {
+      updateFilteredRoomDetailsList(filteredRooms, formattedSelectedDate);
+    } else {
+      filteredRoomDetailsList.innerHTML = `
+        <p>No rooms available with the selected criteria. Please search again.</p>`;
+    }
   }
-}
+};
 
 // Dom function that updates filtered results
 const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
