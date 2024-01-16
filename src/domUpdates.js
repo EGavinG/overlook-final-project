@@ -93,7 +93,7 @@ loginButton.addEventListener("click", async (e) => {
 
       document.getElementById("main-holder").style.display = "none";
 
-      document.getElementById("main-container").style.display = "block";
+      document.querySelector(".main-container").style.display = "flex";
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -195,37 +195,54 @@ const updateRoomDetailsList = (roomInfo) => {
 
 const bookRoom = (selectedRoomType, selectedDate) => {
   const formattedSelectedDate = selectedDate.replace(/-/g, "/");
-  const bookedRooms = allBookings.filter(
+  const bookedRoomsForSeletedDate = allBookings.filter(
     (booking) => booking.date === formattedSelectedDate
   );
 
-  const availableRooms = allRooms.filter((room) => {
-    return !bookedRooms.find(
-      (availableRoom) => availableRoom.roomNumber === room.number
-    );
-  });
+  console.log(bookedRoomsForSeletedDate);
 
+  function isRoomAvailable(roomId) {
+    const room = bookedRoomsForSeletedDate.find(
+      (availableRoom) => availableRoom.roomNumber === roomId
+    );
+    if (room) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  console.log(allRooms);
+  let availableRooms = allRooms.filter((room) => {
+    if (isRoomAvailable(room.number)) {
+      return room;
+    }
+  });
+  if (selectedRoomType) {
+    availableRooms = availableRooms.filter(
+      (room) => room.roomType === selectedRoomType
+    );
+  }
+  console.log(availableRooms);
   const filteredRoomDetailsList = document.getElementById(
     "filteredRoomDetailsList"
   );
 
+  // console.log(availableRooms);
+  // const roomDates = allBookings.filter((booking) => {
+  //   return booking.date === selectedDate.replace(/-/g, "/");
+  // });
+  // console.log(selectedDate);
+  // console.log(roomDates);
+
   // Display available rooms for the specified date on the DOM
-  updateFilteredRoomDetailsList(availableRooms, formattedSelectedDate);
+  updateFilteredRoomDetailsList(availableRooms);
 
-  // Optionally further filter by room type
-  if (selectedRoomType !== "") {
-    const filteredRooms = availableRooms.filter(
-      (room) => room.roomType === selectedRoomType
-    );
-
-    console.log(filteredRooms);
-
-    if (filteredRooms.length > 0) {
-      updateFilteredRoomDetailsList(filteredRooms, formattedSelectedDate);
-    } else {
-      filteredRoomDetailsList.innerHTML = `
+  console.log(availableRooms.length);
+  if (availableRooms.length === 0) {
+    filteredRoomDetailsList.innerHTML = `
         <p>No rooms available with the selected criteria. Please search again.</p>`;
-    }
+  } else if (availableRooms.length > 0) {
+    updateFilteredRoomDetailsList(availableRooms);
   }
 };
 
