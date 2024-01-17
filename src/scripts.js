@@ -2,8 +2,12 @@
 import "./css/styles.css";
 import "./images/turing-logo.png";
 import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
-import { displayCustomerData, updateRoomTypeFilterOptions } from "./domUpdates";
-import { resolveCustomerId } from "./customers";
+import { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms } from "./domUpdates";
+import { resolveCustomerId, searchRooms } from "./customers";
+
+let customer;
+let rooms;
+let bookings;
 
 const loginButton = document.getElementById("login-form-submit");
 loginButton.addEventListener("click", async (e) => {
@@ -25,9 +29,9 @@ loginButton.addEventListener("click", async (e) => {
         fetchAPIcall("bookings"),
       ]);
 
-      const customer = allData[0];
-      const rooms = allData[1].rooms;
-      const bookings = allData[2].bookings;
+      customer = allData[0];
+      rooms = allData[1].rooms;
+      bookings = allData[2].bookings;
 
       displayCustomerData(customer, rooms, bookings);
       updateRoomTypeFilterOptions(rooms);
@@ -45,17 +49,14 @@ loginButton.addEventListener("click", async (e) => {
   }
 });
 
-const dateSubmitForm = document.getElementById("customerInteraction");
-dateSubmitForm.addEventListener("submit", handleFormSubmit);
-
-function handleFormSubmit(e) {
-  e.preventDefault();
+const searchRoomsButton = document.getElementById("searchRooms");
+searchRoomsButton.addEventListener("click", () => {
   const dateSelector = document.getElementById("bookingDate");
   const roomTypeSelector = document.getElementById("roomTypeFilter");
 
   const selectedDate = dateSelector.value;
   const selectedRoomType = roomTypeSelector.value;
 
-  kjj(selectedDate, selectedRoomType)
-}
-
+  const availableRooms = searchRooms(rooms, bookings, selectedRoomType, selectedDate)
+  displayAvailableRooms(availableRooms);
+});

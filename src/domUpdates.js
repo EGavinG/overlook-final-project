@@ -16,7 +16,7 @@ const availableRoomsList = document.getElementById("availableRooms");
 const roomTypeFilter = document.getElementById("roomTypeFilter");
 const calendarError = document.getElementById("calendarError");
 const bookStayText = document.getElementById("bookStayText");
-const bookRoomButton = document.getElementById("bookRoom");
+const searchRoomsButton = document.getElementById("searchRooms");
 
 // EventListeners
 
@@ -40,12 +40,6 @@ function handleFormSubmit(e) {
     bookStayText.classList.add("hidden");
   }
 }
-
-bookRoomButton.addEventListener("click", () => {
-  const selectedRoomType = roomTypeFilter.value;
-  const selectedDate = fromDateInput.value;
-  searchRooms(selectedRoomType, selectedDate);
-});
 
 // Dom Functions
 const displayCustomerData = (customer, rooms, bookings) => {
@@ -87,62 +81,37 @@ const displayBookedRoomsInfo = (bookedRoomsInfo) => {
   });
 };
 
-const searchRooms = (selectedRoomType, selectedDate) => {
-  // find all rooms available on selected date
-  const formattedSelectedDate = selectedDate.replace(/-/g, "/");
-
-  let availableRooms = allRooms.filter((room) => {
-    if (
-      !allBookings.find(
-        (booking) =>
-          booking.roomNumber === room.number &&
-          booking.date === formattedSelectedDate
-      )
-    ) {
-      return room;
-    }
-  });
-
-  if (selectedRoomType) {
-    availableRooms = availableRooms.filter(
-      (room) => room.roomType === selectedRoomType
-    );
-  }
+// Dom function that updates filtered results
+const displayAvailableRooms = (availableRooms) => {
 
   if (availableRooms.length === 0) {
-    availableRoomsList.innerHTML = `
-      <p>No rooms available with the selected criteria. Please search again.</p>`;
+    availableRoomsList.innerHTML = `<p>No rooms available with the selected criteria. Please search again.</p>`;
   } else if (availableRooms.length > 0) {
-    displayAvailableRooms(availableRooms);
-  }
-};
+    availableRoomsList.innerHTML = "";
 
-// Dom function that updates filtered results
-const displayAvailableRooms = (filteredRoomInfo, selectedDate) => {
-  availableRoomsList.innerHTML = "";
+    availableRooms.forEach((room) => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("bookings-card");
 
-  filteredRoomInfo.forEach((room) => {
-    const cardDiv = document.createElement("div");
-    cardDiv.classList.add("bookings-card");
+      const detailsList = document.createElement("ul");
 
-    const detailsList = document.createElement("ul");
+      for (const [key, value] of Object.entries(room)) {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${
+          key.charAt(0).toUpperCase() + key.slice(1)
+        }: ${value}`;
+        detailsList.appendChild(listItem);
+      }
 
-    for (const [key, value] of Object.entries(room)) {
-      const listItem = document.createElement("li");
-      listItem.textContent = `${
-        key.charAt(0).toUpperCase() + key.slice(1)
-      }: ${value}`;
-      detailsList.appendChild(listItem);
-    }
+      const bookButton = document.createElement("button");
+      bookButton.textContent = "Book";
 
-    const bookButton = document.createElement("button");
-    bookButton.textContent = "Book";
+      cardDiv.appendChild(detailsList);
+      cardDiv.appendChild(bookButton);
 
-    cardDiv.appendChild(detailsList);
-    cardDiv.appendChild(bookButton);
-
-    availableRoomsList.appendChild(cardDiv);
-  });
+      availableRoomsList.appendChild(cardDiv);
+    });
+  };
 };
 
 // provides room options
@@ -167,4 +136,4 @@ const updateRoomTypeFilterOptions = (rooms) => {
   });
 };
 
-export { displayCustomerData, updateRoomTypeFilterOptions };
+export { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms };

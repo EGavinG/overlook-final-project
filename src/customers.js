@@ -44,10 +44,29 @@ const resolveCustomerId = (username) => {
   return parseInt(username.replace(/\D/g, ""));
 };
 
+const searchRooms = (rooms, bookings, selectedRoomType, selectedDate) => {
+  // find all rooms available on selected date
+  const formattedSelectedDate = selectedDate.replace(/-/g, "/");
+
+  let availableRooms = rooms.filter((room) => {
+    if (!bookings.find((booking) => booking.roomNumber === room.number && booking.date === formattedSelectedDate)) {
+      return room;
+    };
+  });
+
+  if (selectedRoomType) {
+    availableRooms = availableRooms.filter((room) => room.roomType === selectedRoomType);
+  };
+
+  return availableRooms;
+};
+
+
 export {
   uniqueRoomTypes,
   welcomeCustomerHeader,
   customersBookingsInfo,
   customersTotalSpending,
   resolveCustomerId,
+  searchRooms
 };
