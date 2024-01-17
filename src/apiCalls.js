@@ -14,7 +14,7 @@ const bookRoom = async (roomNumber, date, customerId) => {
       body: JSON.stringify({
         roomNumber: roomNumber,
         date: date,
-        customerId: customerId,
+        userID: customerId,
       }),
     });
     console.log("Request payload:", JSON.stringify({ roomNumber, date, customerId }));

@@ -28,8 +28,7 @@ availableRoomsContainer.addEventListener('click', async (event) => {
 
         try {
           const response = await bookRoom(roomNumber, date, customer.id);
-
-          if (response && response.ok) {
+          if (response) {
             bookings.push(response.newBooking);
             displayCustomerData(customer, rooms, bookings);
           } else {
