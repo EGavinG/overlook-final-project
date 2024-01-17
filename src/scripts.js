@@ -60,7 +60,7 @@ loginButton.addEventListener("click", async (e) => {
   // Extract the customer number from the username
   const customerId = resolveCustomerId(username); // Extract only digits
 
-  if (typeof customerId === "number" && password === "1") {
+  if (typeof customerId === "number" && password === "overlook2021") {
     try {
       const allData = await Promise.all([
         fetchAPIcall(`customers/${customerId}`),

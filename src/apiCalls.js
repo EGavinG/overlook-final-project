@@ -17,14 +17,10 @@ const bookRoom = async (roomNumber, date, customerId) => {
         userID: customerId,
       }),
     });
-    console.log("Request payload:", JSON.stringify({ roomNumber, date, customerId }));
 
     if (!response.ok) {
       throw new Error(`Error in bookRoom: ${response.statusText}`);
     }
-
-    console.log("Raw response:", response); 
-
     const jsonResponse = await response.json();
 
     return jsonResponse; 
