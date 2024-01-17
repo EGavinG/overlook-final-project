@@ -39,14 +39,13 @@ loginButton.addEventListener("click", async (e) => {
   const password = loginForm.password.value;
 
   // Extract the customer number from the username
-  const customerNumber = parseInt(username.replace(/\D/g, "")); // Extract only digits
+  const customerId = parseInt(username.replace(/\D/g, "")); // Extract only digits
 
   if (!isNaN(customerNumber) && password === "overlook2021") {
-    let id = customerNumber;
 
     try {
       const allData = await Promise.all([
-        fetchAPIcall(`customers/${id}`),
+        fetchAPIcall(`customers/${customerId}`),
         fetchAPIcall("customers"),
         fetchAPIcall("rooms"),
         fetchAPIcall("bookings"),
