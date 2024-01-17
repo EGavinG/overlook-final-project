@@ -2,7 +2,7 @@
 import "./css/styles.css";
 import "./images/turing-logo.png";
 import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
-import { disperseAllData } from "./domUpdates";
+import { displayCustomerData } from "./domUpdates";
 import { resolveCustomerId } from "./customers";
 
 // Commented out as there is no user on new page load currently.
@@ -44,21 +44,19 @@ loginButton.addEventListener("click", async (e) => {
   // Extract the customer number from the username
   const customerId = resolveCustomerId(username); // Extract only digits
 
-  if (!isNaN(customerId) && password === "1") {
+  if (typeof customerId === "number" && password === "1") {
     try {
       const allData = await Promise.all([
         fetchAPIcall(`customers/${customerId}`),
-        fetchAPIcall("customers"),
         fetchAPIcall("rooms"),
         fetchAPIcall("bookings"),
       ]);
 
-      const currentCustomer = allData[0];
-      const allCustomers = allData[1].customers;
-      const allRooms = allData[2].rooms;
-      const allBookings = allData[3].bookings;
+      const customer = allData[0];
+      const rooms = allData[1].rooms;
+      const bookings = allData[2].bookings;
 
-      disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
+      displayCustomerData(customer, rooms, bookings);
 
       alert("You have successfully logged in.");
 

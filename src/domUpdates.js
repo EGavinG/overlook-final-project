@@ -1,5 +1,5 @@
 // Imports
-import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
+import { fetchAPIcall, bookRoom } from "./apiCalls";
 import {
   welcomeCustomerHeader,
   currentCustomersBookedRooms,
@@ -62,7 +62,7 @@ bookRoomButton.addEventListener("click", () => {
 
 window.addEventListener("load", function () {
   if (window.currentUser) {
-    disperseAllData(window.currentUser, allCustomers, allRooms, allBookings);
+    displayCustomerData(window.currentUser, allCustomers, allRooms, allBookings);
   } else {
     console.log(
       "User not logged in. Display login form or redirect to login page."
@@ -71,7 +71,7 @@ window.addEventListener("load", function () {
 });
 
 // Dom Functions
-const disperseAllData = (currentCustomer, allCustomers, allRooms, allBookings) => {
+const displayCustomerData = (currentCustomer, allRooms, allBookings) => {
   const customersBookedRooms = currentCustomersBookedRooms(
     currentCustomer,
     allBookings
@@ -115,7 +115,7 @@ const updateRoomDetailsList = (roomInfo) => {
         <p class="descriptor"> Bed Size: <span>${room.bedSize}</span></p>
         <p class="descriptor"> Beds: <span>${room.numBeds}</span></p>
         <p class="descriptor"> Per Night: <span>$${room.costPerNight}</span></p>
-        <button class ="booking-button">Book</button> 
+        <button class ="booking-=">Book</button> 
       </div>
       <br>
     `;
@@ -206,4 +206,4 @@ const updateRoomTypeFilterOptions = (roomTypes) => {
   });
 };
 
-export { disperseAllData };
+export { displayCustomerData };
