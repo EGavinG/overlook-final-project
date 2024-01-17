@@ -15,20 +15,40 @@ const searchRoomsButton = document.getElementById("searchRooms");
 const availableRoomsContainer = document.getElementById('availableRooms');
 
 // Event Listeners/Handlers
-availableRoomsContainer.addEventListener('click', (event) => {
+availableRoomsContainer.addEventListener('click', async (event) => {
   if (event.target.nodeName === 'BUTTON') {
-    const roomNumber = Number(event.target.previousElementSibling.dataset.number)
-    const selectedDate = document.getElementById("bookingDate").value;
-    const date = formatDate(selectedDate);
+    const roomElement = event.target.closest('[data-number]');
 
-    const response = bookRoom(roomNumber, date, customer.id)
-    if (response.ok) {
-      bookings.push(response.newBooking)
-      displayCustomerData(customer, rooms, bookings)
+    if (roomElement) {
+      const roomNumber = Number(roomElement.dataset.number);
+
+      if (!isNaN(roomNumber)) {
+        const selectedDate = document.getElementById("bookingDate").value;
+        const date = formatDate(selectedDate);
+
+        try {
+          const response = await bookRoom(roomNumber, date, customer.id);
+
+          if (response && response.ok) {
+            bookings.push(response.newBooking);
+            displayCustomerData(customer, rooms, bookings);
+          } else {
+            console.error("Booking failed:", response ? response.error : "Unknown error");
+          }
+        } catch (error) {
+          console.error("Error booking room:", error);
+        }
+      } else {
+        console.error("Invalid roomNumber:", roomElement.dataset.number);
+      }
+    } else {
+      console.error("Data-number attribute not found on parent elements");
     }
   }
+});
 
-  // get newbooking object from response
+
+
 
 loginButton.addEventListener("click", async (e) => {
   e.preventDefault();

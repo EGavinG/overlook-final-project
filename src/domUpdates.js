@@ -13,6 +13,8 @@ const displayAvailableRooms = (availableRooms) => {
       const cardDiv = document.createElement("div");
       cardDiv.classList.add("bookings-card");
 
+      cardDiv.dataset.number = room.number;
+
       const detailsList = document.createElement("ul");
 
       for (const [key, value] of Object.entries(room)) {
@@ -31,8 +33,9 @@ const displayAvailableRooms = (availableRooms) => {
 
       availableRoomsList.appendChild(cardDiv);
     });
-  };
+  }
 };
+
 
 const displayBookedRoomsInfo = (bookedRoomsInfo) => {
   const roomDetailsList = document.getElementById("roomDetailsList");

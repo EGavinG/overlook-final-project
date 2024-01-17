@@ -4,34 +4,35 @@ const fetchAPIcall = (data) => {
     .catch((error) => console.log(error));
 };
 
-//Not in use yet
-const bookRoom = (roomNumber, date, userID) => {
-  return fetch("http://localhost:3001/api/v1/bookings", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userID: userID,
-      date: date,
-      roomNumber: roomNumber,
-    }),
-  })
-    .then((res) => {
-      if (res.ok) {
-       
-      } else {
-        console.log("status", res.status);
-        return res.json().then((errorData) => {
-          throw new Error(
-            errorData.message ||
-              "Unable to reserve the room. Please give us a call"
-          );
-        });
-      }
-    })
-    .then((data) => console.log(data))
-    .catch((error) => {
-      console.log(error.message);
+const bookRoom = async (roomNumber, date, customerId) => {
+  try {
+    const response = await fetch("http://localhost:3001/api/v1/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomNumber: roomNumber,
+        date: date,
+        customerId: customerId,
+      }),
     });
+    console.log("Request payload:", JSON.stringify({ roomNumber, date, customerId }));
+
+    if (!response.ok) {
+      throw new Error(`Error in bookRoom: ${response.statusText}`);
+    }
+
+    console.log("Raw response:", response); 
+
+    const jsonResponse = await response.json();
+
+    return jsonResponse; 
+  } catch (error) {
+    console.error("Error in bookRoom:", error);
+    throw error; 
+  }
 };
+
 
 export { fetchAPIcall, bookRoom };
