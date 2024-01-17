@@ -30,13 +30,16 @@ const filterCustomerBookings = (customer, bookings) => {
   return bookings.filter((booking) => booking.userID === customer.id);
 };
 
+const formatDate = (selectedDate) => {
+  return selectedDate.replace(/-/g, "/")
+};
+
 const resolveCustomerId = (username) => {
   return parseInt(username.replace(/\D/g, ""));
 };
 
 const searchRooms = (rooms, bookings, selectedRoomType, selectedDate) => {
-  // find all rooms available on selected date
-  const formattedSelectedDate = selectedDate.replace(/-/g, "/");
+  const formattedSelectedDate = formatDate(selectedDate)
 
   let availableRooms = rooms.filter((room) => {
     if (!bookings.find((booking) => booking.roomNumber === room.number && booking.date === formattedSelectedDate)) {
@@ -58,6 +61,7 @@ const uniqueRoomTypes = (allRooms) => {
 export {
   customersBookingsInfo,
   customersTotalSpending,
+  formatDate,
   resolveCustomerId,
   searchRooms,
   uniqueRoomTypes

@@ -1,9 +1,9 @@
 // Imports for initial start of scripts.js
 import "./css/styles.css";
 import "./images/turing-logo.png";
-import { fetchAPIcall } from "./apiCalls";
+import { fetchAPIcall, bookRoom } from "./apiCalls";
 import { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms } from "./domUpdates";
-import { resolveCustomerId, searchRooms } from "./customers";
+import { formatDate, resolveCustomerId, searchRooms } from "./customers";
 
 let customer;
 let rooms;
@@ -12,8 +12,24 @@ let bookings;
 // Query Selectors
 const loginButton = document.getElementById("login-form-submit");
 const searchRoomsButton = document.getElementById("searchRooms");
+const availableRoomsContainer = document.getElementById('availableRooms');
 
 // Event Listeners/Handlers
+availableRoomsContainer.addEventListener('click', (event) => {
+  if (event.target.nodeName === 'BUTTON') {
+    const roomNumber = Number(event.target.previousElementSibling.dataset.number)
+    const selectedDate = document.getElementById("bookingDate").value;
+    const date = formatDate(selectedDate);
+
+    const response = bookRoom(roomNumber, date, customer.id)
+    if (response.ok) {
+      bookings.push(response.newBooking)
+      displayCustomerData(customer, rooms, bookings)
+    }
+  }
+
+  // get newbooking object from response
+
 loginButton.addEventListener("click", async (e) => {
   e.preventDefault();
   const loginForm = document.getElementById("login-form");
