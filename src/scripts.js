@@ -1,7 +1,7 @@
 // Imports for initial start of scripts.js
 import "./css/styles.css";
 import "./images/turing-logo.png";
-import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
+import { fetchAPIcall } from "./apiCalls";
 import { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms } from "./domUpdates";
 import { resolveCustomerId, searchRooms } from "./customers";
 
@@ -9,7 +9,11 @@ let customer;
 let rooms;
 let bookings;
 
+// Query Selectors
 const loginButton = document.getElementById("login-form-submit");
+const searchRoomsButton = document.getElementById("searchRooms");
+
+// Event Listeners/Handlers
 loginButton.addEventListener("click", async (e) => {
   e.preventDefault();
   const loginForm = document.getElementById("login-form");
@@ -49,7 +53,6 @@ loginButton.addEventListener("click", async (e) => {
   }
 });
 
-const searchRoomsButton = document.getElementById("searchRooms");
 searchRoomsButton.addEventListener("click", () => {
   const dateSelector = document.getElementById("bookingDate");
   const roomTypeSelector = document.getElementById("roomTypeFilter");
