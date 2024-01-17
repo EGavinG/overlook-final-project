@@ -27,8 +27,8 @@ const customersBookingsInfo = (customer, rooms, bookings) => {
   return bookingsInfo.sort((a, b) => b.date.localeCompare(a.date));
 };
 
-const customersTotalSpending = (roomInfo) => {
-  const totalExpense = roomInfo.reduce((acc, cur) => {
+const customersTotalSpending = (bookedRoomsInfo) => {
+  const totalExpense = bookedRoomsInfo.reduce((acc, cur) => {
     acc += cur.costPerNight;
     return acc;
   }, 0);
