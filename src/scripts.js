@@ -5,34 +5,7 @@ import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
 import { displayCustomerData, updateRoomTypeFilterOptions } from "./domUpdates";
 import { resolveCustomerId } from "./customers";
 
-// Commented out as there is no user on new page load currently.
-//
-// window.addEventListener("load", async function () {
-//   if (window.currentUser) {
-//     // If logged in, load data for the current user
-//     try {
-//       const allData = await Promise.all([
-//         fetchAPIcall(`customers/${window.currentUser}`),
-//         fetchAPIcall("customers"),
-//         fetchAPIcall("rooms"),
-//         fetchAPIcall("bookings"),
-//         //   bookRoomFunction("bookings"),
-//       ]);
-
-//       currentCustomer = allData[0];
-//       allCustomers = allData[1].customers;
-//       allRooms = allData[2].rooms;
-//       allBookings = allData[3].bookings;
-
-//       disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//     }
-//   }
-// });
-
 const loginButton = document.getElementById("login-form-submit");
-
 loginButton.addEventListener("click", async (e) => {
   e.preventDefault();
   const loginForm = document.getElementById("login-form");
@@ -71,3 +44,18 @@ loginButton.addEventListener("click", async (e) => {
     loginErrorMsg.style.opacity = 1;
   }
 });
+
+const dateSubmitForm = document.getElementById("customerInteraction");
+dateSubmitForm.addEventListener("submit", handleFormSubmit);
+
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const dateSelector = document.getElementById("bookingDate");
+  const roomTypeSelector = document.getElementById("roomTypeFilter");
+
+  const selectedDate = dateSelector.value;
+  const selectedRoomType = roomTypeSelector.value;
+
+  kjj(selectedDate, selectedRoomType)
+}
+

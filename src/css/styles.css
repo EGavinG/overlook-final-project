@@ -140,7 +140,7 @@ header {
   color: #333;
 }
 
-#filteredRoomDetailsList {
+#availableRooms {
   width: 511.5px;
   list-style-type: none;
   padding: 5px;
@@ -149,6 +149,10 @@ header {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #000080 #feb215;
+}
+
+#availableRoomsTitle {
+  display: none;
 }
 
 #bookingDate {

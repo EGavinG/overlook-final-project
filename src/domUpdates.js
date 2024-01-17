@@ -7,27 +7,19 @@ import {
 } from "./customers";
 
 // Global Variables
-let currentCustomer;
-let allCustomers;
 let allRooms;
 let allBookings;
 
 // Query Selectors
 const roomDetailsList = document.getElementById("roomDetailsList");
-const filteredRoomDetailsList = document.getElementById(
-  "filteredRoomDetailsList"
-);
-const dateSubmitForm = document.getElementById("customerInteraction");
-const fromDateInput = document.getElementById("bookingDate");
+const availableRoomsList = document.getElementById("availableRooms");
 const roomTypeFilter = document.getElementById("roomTypeFilter");
-const availableRoomsText = document.getElementById("availableRoomsText");
 const calendarError = document.getElementById("calendarError");
 const bookStayText = document.getElementById("bookStayText");
 const bookRoomButton = document.getElementById("bookRoom");
 
 // EventListeners
 
-dateSubmitForm.addEventListener("submit", handleFormSubmit);
 
 function handleFormSubmit(e) {
   e.preventDefault();
@@ -35,8 +27,7 @@ function handleFormSubmit(e) {
   const selectedRoomType = roomTypeFilter.value;
 
   if (fromDate) {
-    availableRoomsText.classList.add("hidden");
-    const roomsConnectedToDate = getRoomsConnectedToDate(fromDate);
+    const roomsConnectedToDate = availableRooms(date);
 
     const filteredRooms =
       selectedRoomType !== "roomOptions"
@@ -81,27 +72,18 @@ function filterRoomsByType(rooms, roomType) {
 }
 
 // Function that updates the dom to show filtered room results
-const displayBookedRoomsInfo = (roomInfo) => {
-  // if (window.currentUser) {
-  filteredRoomDetailsList.innerHTML = ""; // Clear filtered room details list
+const displayRooms = (rooms) => {
+
+}
+
+const displayBookedRoomsInfo = (bookedRoomsInfo) => {
+  availableRoomsList.innerHTML = ""; // Clear filtered room details list
   roomDetailsList.innerHTML = ""; // Clear original room details list
 
-  roomInfo.forEach((room) => {
+  bookedRoomsInfo.forEach((bookedRoomInfo) => {
     const listItem = document.createElement("li");
-    listItem.textContent = `Date: ${room.date}, Room Type: ${room.roomType}, Bed Size: ${room.bedSize}, Cost per Night: $${room.costPerNight}`;
+    listItem.textContent = `Date: ${bookedRoomInfo.date}, Info Type: ${bookedRoomInfo.roomType}, Bed Size: ${bookedRoomInfo.bedSize}, Cost per Night: $${bookedRoomInfo.costPerNight}`;
     roomDetailsList.appendChild(listItem);
-
-    filteredRoomDetailsList.innerHTML += `
-      <div class="bookings-card">
-        <p class="date"> Date: <span>${room.date}</span></p>
-        <p class="descriptor"> Room Type: <span>${room.roomType}</span></p>
-        <p class="descriptor"> Bed Size: <span>${room.bedSize}</span></p>
-        <p class="descriptor"> Beds: <span>${room.numBeds}</span></p>
-        <p class="descriptor"> Per Night: <span>$${room.costPerNight}</span></p>
-        <button class ="booking-=">Book</button> 
-      </div>
-      <br>
-    `;
   });
 };
 
@@ -126,21 +108,18 @@ const searchRooms = (selectedRoomType, selectedDate) => {
       (room) => room.roomType === selectedRoomType
     );
   }
-  const filteredRoomDetailsList = document.getElementById(
-    "filteredRoomDetailsList"
-  );
 
   if (availableRooms.length === 0) {
-    filteredRoomDetailsList.innerHTML = `
+    availableRoomsList.innerHTML = `
       <p>No rooms available with the selected criteria. Please search again.</p>`;
   } else if (availableRooms.length > 0) {
-    updateFilteredRoomDetailsList(availableRooms);
+    displayAvailableRooms(availableRooms);
   }
 };
 
 // Dom function that updates filtered results
-const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
-  filteredRoomDetailsList.innerHTML = "";
+const displayAvailableRooms = (filteredRoomInfo, selectedDate) => {
+  availableRoomsList.innerHTML = "";
 
   filteredRoomInfo.forEach((room) => {
     const cardDiv = document.createElement("div");
@@ -162,7 +141,7 @@ const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
     cardDiv.appendChild(detailsList);
     cardDiv.appendChild(bookButton);
 
-    filteredRoomDetailsList.appendChild(cardDiv);
+    availableRoomsList.appendChild(cardDiv);
   });
 };
 
