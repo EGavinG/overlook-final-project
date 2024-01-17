@@ -1,7 +1,6 @@
 // Imports
 import { fetchAPIcall, bookRoom } from "./apiCalls";
 import {
-  welcomeCustomerHeader,
   customersBookingsInfo,
   customersTotalSpending,
   uniqueRoomTypes,
@@ -14,8 +13,6 @@ let allRooms;
 let allBookings;
 
 // Query Selectors
-const welcomeHeader = document.querySelector("#header");
-const totalAmountSpent = document.querySelector("p.spent");
 const roomDetailsList = document.getElementById("roomDetailsList");
 const filteredRoomDetailsList = document.getElementById(
   "filteredRoomDetailsList"
@@ -46,7 +43,7 @@ function handleFormSubmit(e) {
         ? filterRoomsByType(roomsConnectedToDate, selectedRoomType)
         : roomsConnectedToDate;
 
-    updateRoomDetailsList(filteredRooms);
+    displayBookedRoomInfo(filteredRooms);
   } else {
     calendarError.classList.remove("hidden");
     bookStayText.classList.add("hidden");
@@ -64,28 +61,27 @@ const displayCustomerData = (customer, rooms, bookings) => {
   displayWelcomeHeader(customer);
 
   const bookedRoomsInfo = customersBookingsInfo(customer, rooms, bookings);
-
-  const customersBookingsExpense = customersTotalSpending(bookedRoomsInfo);
-  totalAmountSpent.innerText = `Total Amount Spent: $${customersBookingsExpense}`;
-
-  const roomTypes = uniqueRoomTypes(rooms);
-  updateRoomTypeFilterOptions(roomTypes);
-
-  updateRoomDetailsList(bookedRoomsInfo);
-
-  uniqueRoomTypes(rooms);
+  displayTotalAmountSpent(bookedRoomsInfo)
+  displayBookedRoomsInfo(bookedRoomsInfo);
 };
 
 function displayWelcomeHeader(customer) {
   header.textContent = `Welcome to Your Overlook Booking Dashboard, ${customer.name.split(" ")[0]}!`;
 };
 
+function displayTotalAmountSpent(bookedRoomsInfo) {
+  const spendingInfoContainer = document.querySelector("p.spent");
+  const amountSpent = customersTotalSpending(bookedRoomsInfo);
+
+  spendingInfoContainer.innerText = `Total Amount Spent: $${amountSpent}`;
+}
+
 function filterRoomsByType(rooms, roomType) {
   return rooms.filter((room) => room.roomType === roomType);
 }
 
 // Function that updates the dom to show filtered room results
-const updateRoomDetailsList = (roomInfo) => {
+const displayBookedRoomsInfo = (roomInfo) => {
   // if (window.currentUser) {
   filteredRoomDetailsList.innerHTML = ""; // Clear filtered room details list
   roomDetailsList.innerHTML = ""; // Clear original room details list
@@ -171,9 +167,8 @@ const updateFilteredRoomDetailsList = (filteredRoomInfo, selectedDate) => {
 };
 
 // provides room options
-const updateRoomTypeFilterOptions = (roomTypes) => {
+const updateRoomTypeFilterOptions = (rooms) => {
   const roomTypeFilter = document.getElementById("roomTypeFilter");
-
   roomTypeFilter.innerHTML = "";
 
   // Default option (not selectable)
@@ -184,7 +179,7 @@ const updateRoomTypeFilterOptions = (roomTypes) => {
   defaultOption.selected = true;
   roomTypeFilter.appendChild(defaultOption);
 
-  // Capitalize the first letter of each room type
+  const roomTypes = uniqueRoomTypes(rooms);
   roomTypes.forEach((roomType) => {
     const option = document.createElement("option");
     option.value = roomType;
@@ -193,4 +188,4 @@ const updateRoomTypeFilterOptions = (roomTypes) => {
   });
 };
 
-export { displayCustomerData };
+export { displayCustomerData, updateRoomTypeFilterOptions };

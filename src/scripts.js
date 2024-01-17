@@ -2,7 +2,7 @@
 import "./css/styles.css";
 import "./images/turing-logo.png";
 import { fetchAPIcall, bookRoomFunction } from "./apiCalls";
-import { displayCustomerData } from "./domUpdates";
+import { displayCustomerData, updateRoomTypeFilterOptions } from "./domUpdates";
 import { resolveCustomerId } from "./customers";
 
 // Commented out as there is no user on new page load currently.
@@ -57,6 +57,7 @@ loginButton.addEventListener("click", async (e) => {
       const bookings = allData[2].bookings;
 
       displayCustomerData(customer, rooms, bookings);
+      updateRoomTypeFilterOptions(rooms);
 
       alert("You have successfully logged in.");
 
