@@ -34,34 +34,6 @@ const loginErrorMsg = document.getElementById("login-error-msg");
 
 // EventListeners
 
-window.addEventListener("load", async function () {
-  if (window.currentUser) {
-    // If logged in, load data for the current user
-    try {
-      const allData = await Promise.all([
-        fetchAPIcall(`customers/${window.currentUser}`),
-        fetchAPIcall("customers"),
-        fetchAPIcall("rooms"),
-        fetchAPIcall("bookings"),
-        bookRoomFunction("bookings"),
-      ]);
-
-      currentCustomer = allData[0];
-      allCustomers = allData[1].customers;
-      allRooms = allData[2].rooms;
-      allBookings = allData[3].bookings;
-
-      disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  } else {
-    // If not logged in, show login form or redirect to login page
-    console.log(
-      "User not logged in. Display login form or redirect to login page."
-    );
-  }
-});
 
 loginButton.addEventListener("click", async (e) => {
   e.preventDefault();

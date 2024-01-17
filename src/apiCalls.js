@@ -1,10 +1,11 @@
-export const fetchAPIcall = (data) => {
+const fetchAPIcall = (data) => {
   return fetch(`http://localhost:3001/api/v1/${data}`)
     .then((response) => response.json())
     .catch((error) => console.log(error));
 };
 
-export const bookRoomFunction = (roomNumber, fromDate, userID) => {
+//Not in use yet
+const bookRoomFunction = (roomNumber, fromDate, userID) => {
   return fetch("http://localhost:3001/api/v1/${data}", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -37,3 +38,5 @@ export const bookRoomFunction = (roomNumber, fromDate, userID) => {
       console.log(error.message);
     });
 };
+
+export {fetchAPIcall, bookRoomFunction}
