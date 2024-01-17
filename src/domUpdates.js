@@ -31,8 +31,6 @@ const bookRoomButton = document.getElementById("bookRoom");
 
 // EventListeners
 
-
-
 dateSubmitForm.addEventListener("submit", handleFormSubmit);
 
 function handleFormSubmit(e) {
@@ -73,7 +71,7 @@ window.addEventListener("load", function () {
 });
 
 // Dom Functions
-const disperseAllData = (data) => {
+const disperseAllData = (currentCustomer, allCustomers, allRooms, allBookings) => {
   const customersBookedRooms = currentCustomersBookedRooms(
     currentCustomer,
     allBookings
@@ -129,9 +127,15 @@ const searchRooms = (selectedRoomType, selectedDate) => {
   const formattedSelectedDate = selectedDate.replace(/-/g, "/");
 
   let availableRooms = allRooms.filter((room) => {
-    if (!allBookings.find((booking) => booking.roomNumber === room.number && booking.date === formattedSelectedDate)) {
+    if (
+      !allBookings.find(
+        (booking) =>
+          booking.roomNumber === room.number &&
+          booking.date === formattedSelectedDate
+      )
+    ) {
       return room;
-    };
+    }
   });
 
   if (selectedRoomType) {
@@ -201,3 +205,5 @@ const updateRoomTypeFilterOptions = (roomTypes) => {
     roomTypeFilter.appendChild(option);
   });
 };
+
+export { disperseAllData };

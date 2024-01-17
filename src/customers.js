@@ -48,10 +48,15 @@ const uniqueRoomTypes = (allRooms) => {
   return [...new Set(allRooms.map((room) => room.roomType))];
 };
 
+const resolveCustomerId = (username) => {
+  return parseInt(username.replace(/\D/g, ""));
+}
+
 export {
   uniqueRoomTypes,
   welcomeCustomerHeader,
   currentCustomersBookedRooms,
   currentCustomersRoomInfo,
   customersTotalSpending,
+  resolveCustomerId,
 };
