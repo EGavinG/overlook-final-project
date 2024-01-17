@@ -60,16 +60,6 @@ bookRoomButton.addEventListener("click", () => {
   searchRooms(selectedRoomType, selectedDate);
 });
 
-window.addEventListener("load", function () {
-  if (window.currentUser) {
-    displayCustomerData(window.currentUser, allCustomers, allRooms, allBookings);
-  } else {
-    console.log(
-      "User not logged in. Display login form or redirect to login page."
-    );
-  }
-});
-
 // Dom Functions
 const displayCustomerData = (currentCustomer, allRooms, allBookings) => {
   const customersBookedRooms = currentCustomersBookedRooms(
