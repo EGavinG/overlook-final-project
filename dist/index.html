@@ -22,21 +22,27 @@
       </div>
 
       <form id="login-form">
+        <label for="username-field">Username</label>
         <input
           type="text"
           name="username"
           id="username-field"
           class="login-form-field"
           placeholder="Username"
+          aria-label="Username"
         />
+        
+        <label for="password-field">Password</label>
         <input
           type="password"
           name="password"
           id="password-field"
           class="login-form-field"
           placeholder="Password"
+          aria-label="Password"
         />
-        <input type="submit" value="Login" id="login-form-submit" />
+        
+        <input type="submit" value="Login" id="login-form-submit" tabindex="0" />
       </form>
     </section>
     <div class="main-container">
@@ -44,28 +50,29 @@
         <div>
           <div>
             <h2><p class="spent">Total Amount Spent</p></h2>
-            <!-- Make this targetted section dynamically built out with js -->
-
-            <h2>My Room Bookings</h2>
+            <!-- Make this targeted section dynamically built out with js -->
+            <br>
+            <h2>My Room Bookings </h2>
+            <h3>Most Recent to Past:</h3>
             <br />
-            <ul id="roomDetailsList"></ul>
+            <ul id="roomDetailsList" role="list"></ul>
           </div>
         </div>
       </section>
 
       <section id="customerInteraction">
-        <label for="bookingDate">Select Booking Date:</label>
-        <input type="date" id="bookingDate" name="bookingDate" required />
+        <label for="bookingDate"><h2>Select Booking Date:</h2></label>
+        <input type="date" id="bookingDate" name="bookingDate" required aria-label="Select Booking Date"/>
         <br />
-        <label for="roomTypeFilter">Room Type:</label>
-        <select id="roomTypeFilter" name="roomTypeFilter">
+        <label for="roomTypeFilter"><h2>Room Type:</h2></label>
+        <select id="roomTypeFilter" name="roomTypeFilter" aria-label="Room Type">
           <option value="roomOptions">Rooms</option>
         </select>
 
-        <button id="searchRooms">Search Rooms</button>
+        <button id="searchRooms" tabindex="0">Search Rooms</button>
         <br />
         <h2 id="availableRoomsTitle">All Available Rooms</h2>
-        <ul id="availableRooms"></ul>
+        <ul id="availableRooms" role="list" aria-live="polite"></ul>
       </section>
     </div>
 
