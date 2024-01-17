@@ -2,8 +2,7 @@
 import { fetchAPIcall, bookRoom } from "./apiCalls";
 import {
   welcomeCustomerHeader,
-  currentCustomersBookedRooms,
-  currentCustomersRoomInfo,
+  customersBookingsInfo,
   customersTotalSpending,
   uniqueRoomTypes,
 } from "./customers";
@@ -61,26 +60,19 @@ bookRoomButton.addEventListener("click", () => {
 });
 
 // Dom Functions
-const displayCustomerData = (currentCustomer, allRooms, allBookings) => {
-  const customersBookedRooms = currentCustomersBookedRooms(
-    currentCustomer,
-    allBookings
-  );
-  const customersRoomInfo = currentCustomersRoomInfo(
-    customersBookedRooms,
-    allRooms
-  );
+const displayCustomerData = (customer, rooms, bookings) => {
+  const bookedRoomsData = customersBookingsInfo(customer, rooms, bookings);
 
-  const welcomeHeader = welcomeCustomerHeader(currentCustomer);
-  const customersBookingsExpense = customersTotalSpending(customersRoomInfo);
+  const welcomeHeader = welcomeCustomerHeader(customer);
+  const customersBookingsExpense = customersTotalSpending(bookedRoomsData);
   totalAmountSpent.innerText = `Total Amount Spent: $${customersBookingsExpense}`;
 
-  const roomTypes = uniqueRoomTypes(allRooms);
+  const roomTypes = uniqueRoomTypes(rooms);
   updateRoomTypeFilterOptions(roomTypes);
 
-  updateRoomDetailsList(customersRoomInfo);
+  updateRoomDetailsList(bookedRoomsData);
 
-  uniqueRoomTypes(allRooms);
+  uniqueRoomTypes(rooms);
 };
 
 function filterRoomsByType(rooms, roomType) {

@@ -4,35 +4,27 @@ const welcomeCustomerHeader = (currentCustomer) => {
   }!`);
 };
 
-const currentCustomersBookedRooms = (currentCustomer, bookedRooms) => {
-  const customerID = currentCustomer.id;
-  return bookedRooms.filter((booking) => booking.userID === customerID);
+const filterCustomerBookings = (customer, bookings) => {
+  return bookings.filter((booking) => booking.userID === customer.id);
 };
 
-const currentCustomersRoomInfo = (customersBookedRooms, allRooms) => {
-  const findRoomNumbers = customersBookedRooms.map(
-    (bookedRoom) => bookedRoom.roomNumber
-  );
+const customersBookingsInfo = (customer, rooms, bookings) => {
+  const customerBookings = filterCustomerBookings(customer, bookings)
 
-  const bookedDates = customersBookedRooms.map((bookedRoom) => bookedRoom.date);
-
-  const filteredRooms = allRooms.filter((room) =>
-    findRoomNumbers.includes(room.number)
-  );
-
-  const filteredRoomsAndDates = filteredRooms.map((room, index) => {
+  const bookingsInfo = customerBookings.map((booking) => {
+    const room = rooms.find((room) => room.number === booking.roomNumber);
     return {
-      date: bookedDates[index],
+      date: booking.date,
       bedSize: room.bedSize,
       bidet: room.bidet,
       costPerNight: room.costPerNight,
       numBeds: room.numBeds,
       number: room.number,
-      roomType: room.roomType,
-    };
-  });
+      roomType: room.roomType
+    }
+  })
 
-  return filteredRoomsAndDates.sort((a, b) => b.date.localeCompare(a.date))
+  return bookingsInfo.sort((a, b) => b.date.localeCompare(a.date));
 };
 
 const customersTotalSpending = (roomInfo) => {
@@ -50,13 +42,12 @@ const uniqueRoomTypes = (allRooms) => {
 
 const resolveCustomerId = (username) => {
   return parseInt(username.replace(/\D/g, ""));
-}
+};
 
 export {
   uniqueRoomTypes,
   welcomeCustomerHeader,
-  currentCustomersBookedRooms,
-  currentCustomersRoomInfo,
+  customersBookingsInfo,
   customersTotalSpending,
   resolveCustomerId,
 };
