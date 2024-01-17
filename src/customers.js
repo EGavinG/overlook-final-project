@@ -1,42 +1,24 @@
-const welcomeCustomerHeader = (currentCustomer) => {
-  return (header.textContent = `Welcome to Your Overlook Booking Dashboard, ${
-    currentCustomer.name.split(" ")[0]
-  }!`);
-};
+const customersBookingsInfo = (customer, rooms, bookings) => {
+  const customerBookings = filterCustomerBookings(customer, bookings)
 
-const currentCustomersBookedRooms = (currentCustomer, bookedRooms) => {
-  const customerID = currentCustomer.id;
-  return bookedRooms.filter((booking) => booking.userID === customerID);
-};
-
-const currentCustomersRoomInfo = (customersBookedRooms, allRooms) => {
-  const findRoomNumbers = customersBookedRooms.map(
-    (bookedRoom) => bookedRoom.roomNumber
-  );
-
-  const bookedDates = customersBookedRooms.map((bookedRoom) => bookedRoom.date);
-
-  const filteredRooms = allRooms.filter((room) =>
-    findRoomNumbers.includes(room.number)
-  );
-
-  const filteredRoomsAndDates = filteredRooms.map((room, index) => {
+  const bookingsInfo = customerBookings.map((booking) => {
+    const room = rooms.find((room) => room.number === booking.roomNumber);
     return {
-      date: bookedDates[index],
+      date: booking.date,
       bedSize: room.bedSize,
       bidet: room.bidet,
       costPerNight: room.costPerNight,
       numBeds: room.numBeds,
       number: room.number,
-      roomType: room.roomType,
-    };
-  });
+      roomType: room.roomType
+    }
+  })
 
-  return filteredRoomsAndDates.sort((a, b) => b.date.localeCompare(a.date))
+  return bookingsInfo.sort((a, b) => b.date.localeCompare(a.date));
 };
 
-const customersTotalSpending = (roomInfo) => {
-  const totalExpense = roomInfo.reduce((acc, cur) => {
+const customersTotalSpending = (bookedRoomsInfo) => {
+  const totalExpense = bookedRoomsInfo.reduce((acc, cur) => {
     acc += cur.costPerNight;
     return acc;
   }, 0);
@@ -44,14 +26,43 @@ const customersTotalSpending = (roomInfo) => {
   return totalExpense.toFixed();
 };
 
+const filterCustomerBookings = (customer, bookings) => {
+  return bookings.filter((booking) => booking.userID === customer.id);
+};
+
+const formatDate = (selectedDate) => {
+  return selectedDate.replace(/-/g, "/")
+};
+
+const resolveCustomerId = (username) => {
+  return parseInt(username.replace(/\D/g, ""));
+};
+
+const searchRooms = (rooms, bookings, selectedRoomType, selectedDate) => {
+  const formattedSelectedDate = formatDate(selectedDate)
+
+  let availableRooms = rooms.filter((room) => {
+    if (!bookings.find((booking) => booking.roomNumber === room.number && booking.date === formattedSelectedDate)) {
+      return room;
+    };
+  });
+
+  if (selectedRoomType) {
+    availableRooms = availableRooms.filter((room) => room.roomType === selectedRoomType);
+  };
+
+  return availableRooms;
+};
+
 const uniqueRoomTypes = (allRooms) => {
   return [...new Set(allRooms.map((room) => room.roomType))];
 };
 
 export {
-  uniqueRoomTypes,
-  welcomeCustomerHeader,
-  currentCustomersBookedRooms,
-  currentCustomersRoomInfo,
+  customersBookingsInfo,
   customersTotalSpending,
+  formatDate,
+  resolveCustomerId,
+  searchRooms,
+  uniqueRoomTypes
 };
