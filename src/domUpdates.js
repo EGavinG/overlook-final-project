@@ -128,7 +128,7 @@ function handleFormSubmit(e) {
 bookRoomButton.addEventListener("click", () => {
   const selectedRoomType = roomTypeFilter.value;
   const selectedDate = fromDateInput.value;
-  bookRoom(selectedRoomType, selectedDate);
+  searchRooms(selectedRoomType, selectedDate);
 });
 
 window.addEventListener("load", function () {
@@ -193,54 +193,28 @@ const updateRoomDetailsList = (roomInfo) => {
   });
 };
 
-const bookRoom = (selectedRoomType, selectedDate) => {
+const searchRooms = (selectedRoomType, selectedDate) => {
+  // find all rooms available on selected date
   const formattedSelectedDate = selectedDate.replace(/-/g, "/");
-  const bookedRoomsForSeletedDate = allBookings.filter(
-    (booking) => booking.date === formattedSelectedDate
-  );
 
-  console.log(bookedRoomsForSeletedDate);
-
-  function isRoomAvailable(roomId) {
-    const room = bookedRoomsForSeletedDate.find(
-      (availableRoom) => availableRoom.roomNumber === roomId
-    );
-    if (room) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  console.log(allRooms);
   let availableRooms = allRooms.filter((room) => {
-    if (isRoomAvailable(room.number)) {
+    if (!allBookings.find((booking) => booking.roomNumber === room.number && booking.date === formattedSelectedDate)) {
       return room;
-    }
+    };
   });
+
   if (selectedRoomType) {
     availableRooms = availableRooms.filter(
       (room) => room.roomType === selectedRoomType
     );
   }
-  console.log(availableRooms);
   const filteredRoomDetailsList = document.getElementById(
     "filteredRoomDetailsList"
   );
 
-  // console.log(availableRooms);
-  // const roomDates = allBookings.filter((booking) => {
-  //   return booking.date === selectedDate.replace(/-/g, "/");
-  // });
-  // console.log(selectedDate);
-  // console.log(roomDates);
-
-  // Display available rooms for the specified date on the DOM
-  updateFilteredRoomDetailsList(availableRooms);
-
-  console.log(availableRooms.length);
   if (availableRooms.length === 0) {
     filteredRoomDetailsList.innerHTML = `
-        <p>No rooms available with the selected criteria. Please search again.</p>`;
+      <p>No rooms available with the selected criteria. Please search again.</p>`;
   } else if (availableRooms.length > 0) {
     updateFilteredRoomDetailsList(availableRooms);
   }
