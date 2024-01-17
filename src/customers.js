@@ -1,6 +1,5 @@
 const customersBookingsInfo = (customer, rooms, bookings) => {
   const customerBookings = filterCustomerBookings(customer, bookings)
-
   const bookingsInfo = customerBookings.map((booking) => {
     const room = rooms.find((room) => room.number === booking.roomNumber);
     return {
@@ -61,6 +60,7 @@ const uniqueRoomTypes = (allRooms) => {
 export {
   customersBookingsInfo,
   customersTotalSpending,
+  filterCustomerBookings,
   formatDate,
   resolveCustomerId,
   searchRooms,
