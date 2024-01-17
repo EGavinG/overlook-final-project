@@ -28,51 +28,10 @@ const availableRoomsText = document.getElementById("availableRoomsText");
 const calendarError = document.getElementById("calendarError");
 const bookStayText = document.getElementById("bookStayText");
 const bookRoomButton = document.getElementById("bookRoom");
-const loginForm = document.getElementById("login-form");
-const loginButton = document.getElementById("login-form-submit");
-const loginErrorMsg = document.getElementById("login-error-msg");
 
 // EventListeners
 
 
-loginButton.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const username = loginForm.username.value;
-  const password = loginForm.password.value;
-
-  // Extract the customer number from the username
-  const customerNumber = parseInt(username.replace(/\D/g, "")); // Extract only digits
-
-  if (!isNaN(customerNumber) && password === "overlook2021") {
-    let id = customerNumber;
-
-    try {
-      const allData = await Promise.all([
-        fetchAPIcall(`customers/${id}`),
-        fetchAPIcall("customers"),
-        fetchAPIcall("rooms"),
-        fetchAPIcall("bookings"),
-      ]);
-
-      currentCustomer = allData[0];
-      allCustomers = allData[1].customers;
-      allRooms = allData[2].rooms;
-      allBookings = allData[3].bookings;
-
-      disperseAllData(currentCustomer, allCustomers, allRooms, allBookings);
-
-      alert("You have successfully logged in.");
-
-      document.getElementById("main-holder").style.display = "none";
-
-      document.querySelector(".main-container").style.display = "flex";
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  } else {
-    loginErrorMsg.style.opacity = 1;
-  }
-});
 
 dateSubmitForm.addEventListener("submit", handleFormSubmit);
 
