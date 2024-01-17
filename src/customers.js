@@ -1,13 +1,3 @@
-const welcomeCustomerHeader = (customer) => {
-  return (header.textContent = `Welcome to Your Overlook Booking Dashboard, ${
-    customer.name.split(" ")[0]
-  }!`);
-};
-
-const filterCustomerBookings = (customer, bookings) => {
-  return bookings.filter((booking) => booking.userID === customer.id);
-};
-
 const customersBookingsInfo = (customer, rooms, bookings) => {
   const customerBookings = filterCustomerBookings(customer, bookings)
 
@@ -36,8 +26,8 @@ const customersTotalSpending = (bookedRoomsInfo) => {
   return totalExpense.toFixed();
 };
 
-const uniqueRoomTypes = (allRooms) => {
-  return [...new Set(allRooms.map((room) => room.roomType))];
+const filterCustomerBookings = (customer, bookings) => {
+  return bookings.filter((booking) => booking.userID === customer.id);
 };
 
 const resolveCustomerId = (username) => {
@@ -61,12 +51,14 @@ const searchRooms = (rooms, bookings, selectedRoomType, selectedDate) => {
   return availableRooms;
 };
 
+const uniqueRoomTypes = (allRooms) => {
+  return [...new Set(allRooms.map((room) => room.roomType))];
+};
 
 export {
-  uniqueRoomTypes,
-  welcomeCustomerHeader,
   customersBookingsInfo,
   customersTotalSpending,
   resolveCustomerId,
-  searchRooms
+  searchRooms,
+  uniqueRoomTypes
 };
