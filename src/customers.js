@@ -1,6 +1,6 @@
-const welcomeCustomerHeader = (currentCustomer) => {
+const welcomeCustomerHeader = (customer) => {
   return (header.textContent = `Welcome to Your Overlook Booking Dashboard, ${
-    currentCustomer.name.split(" ")[0]
+    customer.name.split(" ")[0]
   }!`);
 };
 

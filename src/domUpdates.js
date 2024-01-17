@@ -61,18 +61,23 @@ bookRoomButton.addEventListener("click", () => {
 
 // Dom Functions
 const displayCustomerData = (customer, rooms, bookings) => {
-  const bookedRoomsData = customersBookingsInfo(customer, rooms, bookings);
+  displayWelcomeHeader(customer);
 
-  const welcomeHeader = welcomeCustomerHeader(customer);
-  const customersBookingsExpense = customersTotalSpending(bookedRoomsData);
+  const bookedRoomsInfo = customersBookingsInfo(customer, rooms, bookings);
+
+  const customersBookingsExpense = customersTotalSpending(bookedRoomsInfo);
   totalAmountSpent.innerText = `Total Amount Spent: $${customersBookingsExpense}`;
 
   const roomTypes = uniqueRoomTypes(rooms);
   updateRoomTypeFilterOptions(roomTypes);
 
-  updateRoomDetailsList(bookedRoomsData);
+  updateRoomDetailsList(bookedRoomsInfo);
 
   uniqueRoomTypes(rooms);
+};
+
+function displayWelcomeHeader(customer) {
+  header.textContent = `Welcome to Your Overlook Booking Dashboard, ${customer.name.split(" ")[0]}!`;
 };
 
 function filterRoomsByType(rooms, roomType) {
