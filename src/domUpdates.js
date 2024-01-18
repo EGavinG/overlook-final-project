@@ -89,4 +89,16 @@ const updateRoomTypeFilterOptions = (rooms) => {
   });
 };
 
-export { displayAvailableRooms, displayCustomerData, updateRoomTypeFilterOptions };
+const removeBookedRoom = (booking) => {
+  const roomNumber = booking.roomNumber;
+  const roomElement = document.querySelector(`[data-number="${roomNumber}"]`);
+
+  if (roomElement) {
+    const parent = roomElement.parentNode;
+    parent.removeChild(roomElement);
+  } else {
+    console.error(`Room with number ${booking.roomNumber} not found.`);
+  }
+};
+
+export { displayAvailableRooms, displayCustomerData, updateRoomTypeFilterOptions, removeBookedRoom };

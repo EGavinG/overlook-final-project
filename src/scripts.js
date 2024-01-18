@@ -2,7 +2,7 @@
 import "./css/styles.css";
 import "./images/turing-logo.png";
 import { fetchAPIcall, bookRoom } from "./apiCalls";
-import { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms } from "./domUpdates";
+import { displayCustomerData, updateRoomTypeFilterOptions, displayAvailableRooms, removeBookedRoom } from "./domUpdates";
 import { formatDate, resolveCustomerId, searchRooms } from "./customers";
 
 let customer;
@@ -27,16 +27,17 @@ availableRoomsContainer.addEventListener('click', async (event) => {
         const date = formatDate(selectedDate);
 
         try {
-          const response = await bookRoom(roomNumber, date, customer.id);
-          if (response) {
-            bookings.push(response.newBooking);
+          const response = bookRoom(roomNumber, date, customer.id);
+
+          response.then((postResponse) => {
+            const booking = postResponse.newBooking
+            removeBookedRoom(booking)
+            bookings.push(booking);
             displayCustomerData(customer, rooms, bookings);
-          } else {
-            console.error("Booking failed:", response ? response.error : "Unknown error");
-          }
+          })
         } catch (error) {
           console.error("Error booking room:", error);
-        }
+        };
       } else {
         console.error("Invalid roomNumber:", roomElement.dataset.number);
       }
