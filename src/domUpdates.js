@@ -90,7 +90,6 @@ const updateRoomTypeFilterOptions = (rooms) => {
 };
 
 const removeBookedRoom = (booking) => {
-  console.log(booking)
   const roomNumber = booking.roomNumber;
   const roomElement = document.querySelector(`[data-number="${roomNumber}"]`);
 
@@ -98,7 +97,7 @@ const removeBookedRoom = (booking) => {
     const parent = roomElement.parentNode;
     parent.removeChild(roomElement);
   } else {
-    console.error(`Room with number ${roomNumber} not found.`);
+    console.error(`Room with number ${booking.roomNumber} not found.`);
   }
 };
 
