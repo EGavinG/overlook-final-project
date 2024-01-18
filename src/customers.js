@@ -34,7 +34,8 @@ const formatDate = (selectedDate) => {
 };
 
 const resolveCustomerId = (username) => {
-  return parseInt(username.replace(/\D/g, ""));
+  const customerId = parseInt(username.replace('customer', ''), 10);
+  return isNaN(customerId) ? null : customerId;
 };
 
 const searchRooms = (rooms, bookings, selectedRoomType, selectedDate) => {
